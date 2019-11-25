@@ -1,0 +1,117 @@
+Scaling CD Down
+The How and Why of CD for Small Teams and Individual Developers
+20:00 16 Jan 2020
+Tags: ci/cd, devops
+
+Jonathan Hall
+DevOps Evangelist / Go Developer / Clean Coder / Available for Freelance work
+jonathan@jhall.io
+https://jhall.io/
+
+* Show of hands
+
+Raise your hand, and keep it up if...
+
+: You are a software developer
+: You use CI/CD at your day job
+: You also code in your spare time
+: You use CI/CD on your hobby or OSS projects
+
+.background raise_hands.webp
+
+* Story Time
+
+.image story_time.jpg _ 800
+
+.caption Image by [[https://www.flickr.com/photos/soldiersmediacenter/3351707140][The U.S. Army]]
+
+: October 2006, started at DoubleCheck
+: Wild dreams of moving an appliance to a Cloud SaaS...
+: New developer started same time
+: Less than a month in, new developer published update.
+
+* Story Time
+
+: Every single customer server broke (100+)
+: Every phone line was occupied
+: everyone in the company (~25 people) on support duty
+
+.image scary_story.gif _ 800
+
+* Story Time
+
+.image mundane_detail.jpg _ 800
+
+: Determined the problem was a permissions issue (missing executable bit)
+: Several days to manually log in via ssh and fix the problem
+
+* Story Time
+
+.image but_why.gif _ 800
+
+: No test process, no automation
+: Manual build process (create tarball, update ini file)
+: Semi-automated update process, but very fragile, no automated tests
+
+* Story Time
+
+.image happily_ever_after.gif _ 800
+
+
+* The Joel Test
+
+Nearly 10 years before “DevOps”, Joel Spolsky wrote [[https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/][12 Steps to Better Software]]
+
+1. *Do* *you* *use* *source* *control?*
+2. *Can* *you* *make* *a* *build* *in* *one* *step?*
+3. *Do* *you* *make* *daily* *builds?*
+4. Do you have a bug database?
+5. Do you fix bugs before writing new code?
+6. Do you have an up-to-date schedule?
+7. Do you have a spec?
+8. Do programmers have quiet working conditions?
+9. Do you use the best tools money can buy?
+10. *Do* *you* *have* *testers?*
+11. Do new candidates write code during their interview?
+12. Do you do hallway usability testing?
+
+: Good principles, but somewhat outdated in 2020, the age of DevOps
+
+* The Jonathan Test
+
+My version, updated for 2020:
+
+1. *Do* *you* *use* *source* *control* *for* *everything* *reasonable?*
+2. Do you have a bug database?
+3. *Do* *you* *test* *and* *deploy* *your* *software* *every* *time* *it* *changes?*
+4. Do you fix bugs before writing new code?
+5. Do programmers have quiet working conditions?
+6. Do you use the best tools money can buy?
+7. *Do* *you* *have* *testers?*
+8. Do new candidates write code during their interview?
+9. Do you do hallway usability testing?
+10. Do your developers and business people design features together?
+11. *Is* *all* *code* *reviewed* *and* *understandable* *before* *deployment?*
+12. *Can* *your* *developers* *work*, *including* *running* *tests,* *from* *an* *airplane?*
+
+: To do:
+: Continuous Integratoin
+: Continuous Delivery/Deployment
+: IaaC
+
+
+
+* Happily Ever After?
+
+.image happily_ever_after.gif _ 800
+
+: We moved documentation, and some infrastructure to source control.
+: We implemented CI
+: We did implement single-step builds, in the form of .debs
+: We implemented rigorous code review
+: Most tests worked without Internet
+: That project is over, but the broader story continues...
+
+* We'll see
+
+.image the_end.gif _ 800
