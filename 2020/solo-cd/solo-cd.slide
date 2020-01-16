@@ -1,0 +1,181 @@
+Scaling CD Down
+The How and Why of CD for Small Teams and Individual Developers
+20:00 16 Jan 2020
+Tags: ci/cd, devops
+
+Jonathan Hall
+DevOps Evangelist / Go Developer / Clean Coder / Salsa Dancer
+jonathan@jhall.io
+https://jhall.io/
+
+* Show of hands
+
+Raise your hand, and keep it up if...
+
+: You are a software developer
+: You use CI/CD at your day job
+: You also code in your spare time
+: You use CI/CD on your hobby or OSS projects
+
+.background raise_hands.webp
+
+* Metadata
+
+- Recently joined Lana's management team
+- Formerly at Bugaboo as Dev Manager for eCommerce
+- Career-long developer, BE and Ops focused
+
+.image url-qr.png _ 300
+.caption [[https://jhall.io/posts/scaling-cd-down]]
+
+* Story Time
+
+.image story_time.jpg _ 800
+
+.caption Image by [[https://www.flickr.com/photos/soldiersmediacenter/3351707140][The U.S. Army]]
+
+: October 2006, started at DoubleCheck as network engineer
+: Wild dreams of moving an appliance to a Cloud SaaS...
+: New lead developer started same time
+: Less than a month in, new developer published update.
+
+* Story Time
+
+: Every single customer server broke (100+)
+: Every phone line was occupied
+: everyone in the company (~25 people) on support duty
+
+.image scary_story.gif _ 800
+
+* Story Time
+
+.image mundane_detail.jpg _ 800
+
+: Determined the problem was a permissions issue (missing execute bit)
+: Several days to manually log in via ssh and fix the problem on 100+ machines
+
+* Story Time
+
+.image but_why.gif _ 800
+
+: What caused the failure?
+: No test process, no automation
+: Manual build process (create tarball, update ini file, upload to FTP server)
+: No code-level tests at all, no QA process
+: Semi-automated download process, but very fragile, no automated tests
+
+* Story Time
+
+.image happily_ever_after.gif _ 800
+
+: What strategies could help with a happy ending?
+
+* Continuous Delivery to the Rescue
+
+.image to-the-rescue.jpg 500 _
+
+* Common components of CI/CD
+
+.image legacy-pipeline.png _ 800
+
+.image review-pipeline.png _ 700
+
+* Most of these stages are independent of team size
+
+.image size-doesn't-matter.jpg _ 800
+
+: Trunk-based development
+: Pull Requests
+: QA
+: Acceptance Testing (??)
+: Automated testing
+: Automated deployment
+: Review environments
+
+* Trunk-Based Development
+
+A source-control branching model, where developers collaborate on code in a single branch called ‘trunk’.
+
+.image love-branch.jpg 400 _
+
+: ‘trunk’ (or ‘master’) is the only long-lived branch
+: Never commit directly to ‘trunk’
+: Short-lived feature branches
+: Code review, automated tests before merging to ‘trunk’
+: May feel like overkill for a solo project, but it's not
+: Much easier to adopt this when you're working alone or on a small team
+
+* Automated Testing
+
+.image single-assert.jpeg _ 800
+
+: Automated tests in a small CI pipeline is probably obvious on small projects
+: Unit tests
+: API tests
+: Integration tests
+: E2E tests
+: TDD is a lifesaver
+
+* Quality Assurance & Acceptance Testing
+
+.image testers.jpg _ 800
+
+.caption Related blog post: [[https://jhall.io/posts/cd-without-ci/][CD Without CI]]
+
+: Not every project requires an explicit QA process
+: Very few solo projects require acceptance testing, but many small team projects do
+: This can all be done before merging to master
+: Review environments make this easy
+: Treat manual tests as automated tests run by humans.
+
+* QA Part 2: Pre-merge staging
+
+Typical staging:
+
+.image staging-gitflow.png _ 500
+
+Trunk-based staging:
+
+.image staging-trunk.png _ 500
+
+* QA Part 3: Review environments
+
+.image first-qa-review.jpg _ 500
+
+: Review environment for every feature branch
+: Review environments require more work up-front
+: The investment is always easier early in a project
+: GitLab's Auto DevOps can make this easy for Docker-deployable applications
+: IMO, should be golden standard for QUA
+
+* Being small has big advantages
+
+.image small-advantages.jpg _ 500
+
+: Much smaller time investment to set up these steps early
+: Much easier than re-training a large team
+: Most practices pay off just as quickly as on a large team
+: Using these practices on a solo project serves as a reminder to oneself that they are best practices
+
+* Happily Ever After?
+
+.image happily_ever_after.gif _ 800
+
+: We moved documentation, and some infrastructure to source control.
+: We implemented CI
+: We did implement single-step builds, in the form of .debs
+: We implemented rigorous code review
+: Most tests worked without Internet
+: That project is over, but the broader story continues...
+
+* We'll see
+
+.image the_end.gif _ 800
+
+* Questions?
+
+Notes, Slides and Video(?) online:
+
+.image url-qr.png _ 300
+
+.caption [[https://jhall.io/posts/scaling-cd-down]]
