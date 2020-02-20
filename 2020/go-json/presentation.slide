@@ -1,6 +1,6 @@
 Advanced JSON handling in Go
 
-20:00 16 Jan 2020
+19:40 05 Mar 2020
 Tags: golang, json
 
 Jonathan Hall
@@ -8,6 +8,340 @@ DevOps Evangelist / Go Developer / Clean Coder / Salsa Dancer
 jonathan@jhall.io
 https://jhall.io/
 @DevOpsHabits
+
+* Show of hands
+
+Who has...
+
+- ...used JSON in a Go program?
+- ...been frustrated by Go's strict typing when dealing with JSON?
+- ...felt limited by Go's standard JSON handling?
+
+What have been your biggest frustrations?
+
+.background raise_hands.webp
+
+* Today's Topics
+
+- _Very_ brief intro to JSON in Go
+- Basic use of maps and structs
+- Handling inputs of unknown type
+- 
+
+* A brief intro to JSON
+
+- JavaScript Object Notation, defined by RFC 8259
+- Human-readable, textual representation of arbitrary data
+- Limted types: null, Number, String, Boolean, Array, Object
+- Broad applications: Config files, data interchange, simple messaging
+
+* Alternatives to JSON
+
+- YAML, TOML, INI
+- BSON, MessagePack, CBOR, Smile
+- XML
+- ProtoBuf
+- Custom/proprietary formats
+
+Many principles discussed in this presentation apply to any of the above formats.
+
+* Marshaling JSON
+
+Creating JSON from a Go object is (usually) very straight forward:
+
+.play marshal.go /^func main/,/^}/
+
+* Marshaling JSON, #2
+
+Creating JSON from a Go object is (usually) very straight forward:
+
+.play marshal_struct.go /^func main/,/^}/
+
+* Unmarshaling JSON
+
+Unmarshaling JSON is often a bit trickier.
+
+.play unmarshal.go /^func main/,/^}/
+
+* Unmarshaling JSON, #2
+
+Avoid a map whenever possible. [[https://www.youtube.com/watch?v=PAAkCSZUG1c&t=7m36s][interface{} says nothing]]
+
+.play unmarshal_struct.go /^func main/,/^}/
+
+* Unknown types
+
+Structs are nice, but what happens when you don't know the data type prior to unmarshaling?
+
+.image no-idea.jpg
+
+* Cases of "unknown input"
+
+- Input may be string or Number
+
+ 123
+ "123"
+
+- Input may be object, or array of objects
+
+ {...}
+ [{...},{...}]
+
+- Input may be success, or an error
+
+ {"success":true,"results":[...]}
+ {"success":false,"error":"..."}
+
+* Number literal, or string to number
+
+.image age.jpg
+
+* Number literal, or string to number
+
+Perhaps you have a sloppy API, that sometimes returns strings, and sometimes numbers. (True story at Lana)
+
+Sometimes:
+
+ {"id": 123456}
+
+Other times:
+
+ {"id": "123456"}
+
+* Number literal, or string to number
+
+.code num-or-string.go /IntOrString/,/^}/
+
+* Number literal, or string to number
+
+.play num-or-string.go /^func main()/,/^}/
+
+* Number literal, or string to string
+
+.image that-string-secretly-became-a-number.jpeg
+
+* Number literal, or string to string
+
+Perhaps you need to support multiple API versions, and the data type has changed. (True story with CouchDB)
+
+Old version:
+
+ {"seq_id": 1234}
+
+New version:
+
+ {"seq_id": "1234-g1AAAAIreJyVkEsKwjAURZ-toI5cgq5A0sQ0OrI70XyppcaRY92J7kR3ojupaSPUUgotgRd4yTlwbw4A0zRUMLdnpaMkwmyF3Ily9xBwEIuiKLI05KOTW0wkV4rruP29UyGWbordzwKVxWBNOGMKZhertDlarbr5pOT3DV4gudUC9-MPJX9tpEAYx4TQASns2E24ucuJ7rXJSL1BbEgf3vTwpmedCZkYa7Pulck7Xt7x_usFU2aIHOD4eEfVTVA5KMGUkqhNZV-8_o5i"}
+
+* Number literal, or string to string
+
+.code string-or-num.go /StringOrNum/,/^}/
+
+* Number literal, or string to string
+
+.play string-or-num.go /^func main()/,/^}/
+
+* Array or single element
+
+.image cat.jpeg
+
+* Array or single element
+
+Some sloppy APIs return either a single element, or an array of elements.
+
+One result:
+
+ {"results": {"id": 1, ...} }
+
+Multiple results:
+
+ {"results": [{"id": 1, ...}, {"id": 2, ...}] }
+
+* Array or single element
+
+.code string-or-array.go /SliceOrString/,/^}/
+
+* Array or single element
+
+.play string-or-array.go /func main()/,/^}/
+
+* Unknown types
+
+.image what-data-type.jpg 550 _
+
+* Unknown types
+
+Many APIs will return either a successful response, or an error. Some use common fields (i.e. `status`) across both types of responses, some don't.
+
+Success:
+
+ {"results": [ ... ]}
+
+Failure:
+
+ {"error":"not found", "reason":"The requested object does not exist"}
+
+
+There are a number of approaches to this problem.
+
+* Unknown types
+
+First, create our distinct success and error types...
+
+.code success-vs-error.go /^type Success/,/^}/
+
+.code success-vs-error.go /^type Error/,/^}/
+
+* Unknown types
+
+In this simple example, because no fields are shared between the types, we can simply embed both types in a wrapper.
+
+.code success-vs-error.go /^type Response/,/^}/
+
+* Unknown types
+
+.play success-vs-error.go /func main()/,/^}/
+
+* Unknown types, #2
+
+.image not-simply.jpg
+
+* Unknown types, #2
+
+Let's imagine a less straight-forward situation:
+
+Success:
+
+ {"status":"ok", "results": [ ... ]}
+
+Failure:
+
+ {"status":"not found", "reason":"The requested object does not exist"}
+
+* Unknown types, #2
+
+First, create our distinct success and error types...
+
+.code success-vs-error2.go /^type Success/,/^}/
+
+.code success-vs-error2.go /^type Error/,/^}/
+
+* Unknown types, #2
+
+Because the embedded fields conflict, we must be more explicit.
+
+.code success-vs-error2.go /^type Response/,/OMIT/
+
+* Unknown types, #2
+
+.play success-vs-error2.go /func main()/,/^}/
+
+* Using a container
+
+.image cat-box.jpg
+
+* Using a container
+
+Bundling success and error objects like this can be cumbersome. We can use
+a different container type.
+
+.code container.go /^type Response/,/OMIT/
+
+* Using a container
+
+.play container.go /func main()/,/^}/
+
+* Using a container, #2
+
+.image cat-boxes.jpg 550 _
+
+* Using a container, #2
+
+The container can also be a slice (or map) of objects, rather than a single object.
+
+.code container2.go /^type Responses/,/OMIT/
+
+* Using a container, #2
+
+.play container2.go /func main()/,/^}/
+
+* Unknown types, #3
+
+.image confuse-you.jpg
+
+* Unknown types, #3
+
+Let's suppose we may receive any of three types:
+
+ {"type": "person", "name": "Bob", "age": 32}
+
+ {"type": "animal", "species": "dog", "name": "Spot"}
+
+ {"type": "address", "city": "Rotterdam", "street": "Goudsesingel"}
+
+* Unkwnown tyes, #3
+
+.code unknown-types3.go /type Person/,/OMIT/
+
+* Unknown types, #3
+
+.code unknown-types3.go /UnmarshalJSON/,/OMIT/
+
+continued...
+
+* Unknown types, #3
+
+.code unknown-types3.go /MID OMIT/,/OMIT/
+
+* Unknown types, #3
+
+.play unknown-types3.go /func main()/,/^}/
+
+* Unknown types, #4
+
+.image too-many-choices.jpg
+
+* Unknown types, #4
+
+The last example works well, but is not efficient. We can do better.
+
+* Unknown types, #4
+
+.code unknown-types4.go /UnmarshalJSON/,/OMIT/
+
+continued...
+
+* Unknown types, #4
+
+.code unknown-types4.go /MID OMIT/,/OMIT/
+
+* Unknown types, #4
+
+.play unknown-types4.go /func main()/,/^}/
+
+
+
+
+* XXX
+
+Brief intro:
+- MarshalJSON & UnmarshalJSON interfaces
+Stdlib tricks:
+- Numbers 
+- JSON streaming
+- Tokenizer
+- json.RawMessage
+Unmarshal unknown type
+- Error vs success
+- Different structs, etc
+Intermediate tricks:
+- Validation
+- Nullable types
+- Third-party types: time.Time, time.Duration, etc
+- Unmarshaling errors
+Advanced:
+- "Slightly" custom Marshaling
+- Arrays as structs
+
 
 
 * Questions?
