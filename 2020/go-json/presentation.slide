@@ -1,13 +1,23 @@
 Advanced JSON handling in Go
 
 19:40 05 Mar 2020
-Tags: golang, json
 
 Jonathan Hall
 DevOps Evangelist / Go Developer / Clean Coder / Salsa Dancer
 jonathan@jhall.io
 https://jhall.io/
 @DevOpsHabits
+
+* About me
+
+.image me.jpg 280 _
+
+- Open Source contributor; CouchDB PMC, author of Kivik
+- Core Tech Lead for Lana
+- Former eCommerce Dev Manager at Bugaboo
+- Former backend developer at Teamwork.com
+- Former backend developer at Booking.com
+- Former tech lead at eFolder/DoubleCheck
 
 * Show of hands
 
@@ -26,7 +36,7 @@ What have been your biggest frustrations?
 - _Very_ brief intro to JSON in Go
 - Basic use of maps and structs
 - Handling inputs of unknown type
-- 
+- Handling data with some unknown fields
 
 * A brief intro to JSON
 
@@ -94,7 +104,7 @@ Structs are nice, but what happens when you don't know the data type prior to un
 
 * Number literal, or string to number
 
-.image age.jpg
+.image that-string-secretly-became-a-number.jpeg
 
 * Number literal, or string to number
 
@@ -115,30 +125,6 @@ Other times:
 * Number literal, or string to number
 
 .play num-or-string.go /^func main()/,/^}/
-
-* Number literal, or string to string
-
-.image that-string-secretly-became-a-number.jpeg
-
-* Number literal, or string to string
-
-Perhaps you need to support multiple API versions, and the data type has changed. (True story with CouchDB)
-
-Old version:
-
- {"seq_id": 1234}
-
-New version:
-
- {"seq_id": "1234-g1AAAAIreJyVkEsKwjAURZ-toI5cgq5A0sQ0OrI70XyppcaRY92J7kR3ojupaSPUUgotgRd4yTlwbw4A0zRUMLdnpaMkwmyF3Ily9xBwEIuiKLI05KOTW0wkV4rruP29UyGWbordzwKVxWBNOGMKZhertDlarbr5pOT3DV4gudUC9-MPJX9tpEAYx4TQASns2E24ucuJ7rXJSL1BbEgf3vTwpmedCZkYa7Pulck7Xt7x_usFU2aIHOD4eEfVTVA5KMGUkqhNZV-8_o5i"}
-
-* Number literal, or string to string
-
-.code string-or-num.go /StringOrNum/,/^}/
-
-* Number literal, or string to string
-
-.play string-or-num.go /^func main()/,/^}/
 
 * Array or single element
 
@@ -318,36 +304,48 @@ continued...
 
 .play unknown-types4.go /func main()/,/^}/
 
+* Hybrid struct/map
 
+.image hybrid.jpg 550 _
 
+* Hybrid struct/map
 
-* XXX
+Maybe your API sends a response with some known, and some unknown fields.
 
-Brief intro:
-- MarshalJSON & UnmarshalJSON interfaces
-Stdlib tricks:
-- Numbers 
-- JSON streaming
-- Tokenizer
-- json.RawMessage
-Unmarshal unknown type
-- Error vs success
-- Different structs, etc
-Intermediate tricks:
-- Validation
-- Nullable types
-- Third-party types: time.Time, time.Duration, etc
-- Unmarshaling errors
-Advanced:
-- "Slightly" custom Marshaling
-- Arrays as structs
+ {"_id":"bob","type":"user","name":"Bob"}
 
+ {"_id":"meetup","type":"website","url":"https://meetup.com/"}
 
+ {"_id":"soup","type":"recipe","ingredients":["broth","chicken","noodles"]}
+
+* Hybrid struct/map
+
+.code hybrid.go /type Item/,/^}/
+
+* Hybrid struct/map
+
+.code hybrid.go /UnmarshalJSON/,/^}/
+
+* Hybrid struct/map
+
+.play hybrid.go /func main/,/^}/
+
+* Encoding a hybrid struct/map
+
+.image hybrid2.jpeg 550 _
+
+* Encoding a hybrid struct/map
+
+.code hybrid2.go /MarshalJSON/,/^}/
+
+* Encoding a hybrid struct/map
+
+.play hybrid2.go /func main/,/^}/
 
 * Questions?
 
 Notes, links, slides online:
 
-.image qrcode.png _ 300
+.image qr.png _ 300
 
-.caption [[https://jhall.io/posts/go-json-advanced/]]
+.caption [[https://jhall.io/posts/go-json-advanced]]
